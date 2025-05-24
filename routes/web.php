@@ -17,12 +17,34 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/home', function () {
+    return view('home');
+})->middleware(['auth', 'verified']);
+
 Route::get('admin',function(){
-    return '<h1>Hello Admin</h1>';
+    return view('dashboard');
 })->middleware(['auth', 'verified','role:admin']);
 
-Route::get('user',function(){
+
+
+Route::get('/dokter', function () {
+    return view('dokter');
+})->middleware(['auth', 'verified', 'role_or_permission:tambah-adopsi|admin'])->name('dokter');
+
+Route::get('/adopsi', function () {
+    return view('adopsi');
+})->middleware(['auth', 'verified', 'role_or_permission:tambah-adopsi|admin'])->name('adopsi');
+
+Route::get('/blog', function () {
     return view('blog');
-})->middleware(['auth', 'verified','role_or_permission:tambah-artikel|admin']);
+})->middleware(['auth', 'verified', 'role_or_permission:tambah-adopsi|admin'])->name('blog');
+
+Route::get('/contact', function () {
+    return view('contact');
+})->middleware(['auth', 'verified', 'role_or_permission:tambah-adopsi|admin'])->name('contact');
+
+
+
+// dan seterusnya untuk 'blog' dan 'contact'
 
 require __DIR__.'/auth.php';

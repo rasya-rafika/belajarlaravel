@@ -46,6 +46,9 @@ class RegisteredUserController extends Controller
 
         // Beri permission tambah-artikel juga (opsional, karena role user sudah punya)
         $user->givePermissionTo('tambah-artikel');
+        $user->givePermissionTo('tambah-dokter');
+        $user->givePermissionTo('tambah-adopsi');
+        $user->givePermissionTo('tambah-kontak');
 
         event(new Registered($user));
 
