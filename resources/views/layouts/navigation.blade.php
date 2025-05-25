@@ -13,28 +13,28 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ __('Home') }}
                     </x-nav-link>
 
                     <x-nav-link href="{{ url('/dokter') }}" :active="request()->is('dokter')">
-                        {{ __('Dokter') }}
+                        {{ __('Doctors') }}
                     </x-nav-link>
 
                     <x-nav-link href="{{ url('/adopsi') }}" :active="request()->is('adopsi')">
-                        {{ __('Adopsi') }}
+                        {{ __('Adoption') }}
                     </x-nav-link>
 
                     <x-nav-link href="{{ url('/blog') }}" :active="request()->is('blog')">
-                        {{ __('Artikel') }}
+                        {{ __('Artikels') }}
                     </x-nav-link>
 
                     <x-nav-link href="{{ url('/contact') }}" :active="request()->is('contact')">
-                        {{ __('Kontak') }}
+                        {{ __('Contact') }}
                     </x-nav-link>
                 </div>
             </div>
 
-            <!-- Settings Dropdown (Dipindahkan ke kanan) -->
+            <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center ms-auto">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
