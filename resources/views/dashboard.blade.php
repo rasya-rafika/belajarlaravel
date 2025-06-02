@@ -99,10 +99,13 @@
             </div>
         </div>
 
-            @if($artikels->count())
-        <h2 class="text-2xl font-bold text-orange-700 mb-6 text-center">Artikel Terbaru</h2>
+           <!-- Artikel Preview Section -->
+<section id="artikel" class="bg-white px-6 py-12">
+    <h2 class="text-2xl font-bold text-orange-700 mb-6 text-center">Artikel Terbaru</h2>
+
+    @if(isset($artikels) && $artikels->count())
         <div class="grid md:grid-cols-3 sm:grid-cols-2 gap-6">
-            @foreach ($artikels as $item)
+            @foreach ($artikels->take(3) as $item)
                 <div class="bg-white shadow rounded overflow-hidden">
                     <img src="{{ asset('storage/' . $item->gambar) }}" alt="Artikel Image" class="w-full h-48 object-cover">
                     <div class="p-4">
@@ -113,11 +116,16 @@
                 </div>
             @endforeach
         </div>
+        <div class="text-center mt-8">
+            <a href="{{ route('artikel.index') }}" class="inline-block bg-orange-600 hover:bg-orange-700 text-white px-5 py-2 rounded font-semibold transition">
+                Lihat Semua Artikel
+            </a>
+        </div>
     @else
-        <p class="text-gray-500 text-center mt-10">Belum ada artikel yang tersedia.</p>
+        <p class="text-gray-500 text-center">Belum ada artikel yang tersedia.</p>
     @endif
+</section>
 
-    </section>
 
     <!-- Contact Section -->
     <section class="bg-[#FFE8DB] py-12 px-4">

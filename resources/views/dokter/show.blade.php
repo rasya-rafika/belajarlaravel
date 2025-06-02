@@ -1,44 +1,58 @@
 <x-app-layout>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <div class="container py-12">
-        <div class="text-center mb-6">
-            <h1 class="text-3xl font-bold">Detail Dokter Hewan</h1>
+    <div class="max-w-3xl mx-auto py-12 px-4">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Detail Dokter Hewan</h1>
         </div>
 
-        <div class="card mx-auto" style="max-width: 700px;">
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
             @if ($dokter->foto)
-                <img src="{{ asset('storage/' . $dokter->foto) }}" class="card-img-top" style="height: 300px; object-fit: cover;">
+                <img src="{{ asset('storage/' . $dokter->foto) }}" class="w-full h-64 object-cover" alt="Foto Dokter">
             @endif
 
-            <div class="card-body">
-                <h3 class="card-title text-2xl font-bold mb-2">{{ $dokter->nama }}</h3>
-                <p class="mb-1"><strong>Pengalaman:</strong> {{ $dokter->pengalaman }}</p>
-                <p class="mb-1"><strong>Lokasi:</strong> {{ $dokter->lokasi }}</p>
-                <p class="mb-1"><strong>Alamat Lengkap:</strong> {{ $dokter->alamat }}</p>
-                <p class="mb-1"><strong>Jadwal:</strong> {{ $dokter->jadwal ?? '-' }}</p>
-                <p class="mb-1"><strong>Rating:</strong> ⭐ {{ number_format($dokter->ratings->avg('nilai') ?? 0, 1) }} / 5</p>
+            <div class="p-6 space-y-3">
+                <h2 class="text-2xl font-bold text-gray-800">{{ $dokter->nama }}</h2>
 
-                {{-- Tombol rating untuk user --}}
+                <p><span class="font-semibold text-gray-700">Pengalaman:</span> {{ $dokter->pengalaman }}</p>
+                <p><span class="font-semibold text-gray-700">Lokasi:</span> {{ $dokter->lokasi }}</p>
+                <p><span class="font-semibold text-gray-700">Alamat Lengkap:</span> {{ $dokter->alamat }}</p>
+                <p><span class="font-semibold text-gray-700">Jadwal:</span> {{ $dokter->jadwal ?? '-' }}</p>
+                <p class="text-yellow-500">
+                    <span class="font-semibold text-gray-700">Rating:</span> ⭐ {{ number_format($dokter->ratings->avg('nilai') ?? 0, 1) }} / 5
+                </p>
+
                 @role('user')
-                    <a href="{{ route('rating.create', $dokter->id) }}" class="btn btn-success mt-3">Beri Rating</a>
+                    <a href="{{ route('rating.create', $dokter->id) }}"
+                        class="inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded mt-4">
+                        Beri Rating
+                    </a>
                 @endrole
 
-                {{-- Tombol edit & hapus untuk admin --}}
                 @role('admin')
-                    <div class="mt-4 d-flex gap-2">
-                        <a href="{{ route('dokter.edit', $dokter->id) }}" class="btn btn-warning">Edit</a>
+                    <div class="flex flex-wrap gap-3 mt-6">
+                        <a href="{{ route('dokter.edit', $dokter->id) }}"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded">
+                            Edit
+                        </a>
 
-                        <form action="{{ route('dokter.destroy', $dokter->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus dokter ini?')">
+                        <form action="{{ route('dokter.destroy', $dokter->id) }}" method="POST"
+                            onsubmit="return confirm('Yakin ingin menghapus dokter ini?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Hapus</button>
+                            <button type="submit"
+                                class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded">
+                                Hapus
+                            </button>
                         </form>
                     </div>
                 @endrole
 
-                <div class="mt-4">
-                    <a href="{{ route('dokter.index') }}" class="btn btn-secondary">← Kembali ke Daftar Dokter</a>
+                <div class="mt-6">
+                    <a href="{{ route('dokter.index') }}"
+                        class="text-blue-600 hover:underline text-sm">
+                        ← Kembali ke Daftar Dokter
+                    </a>
                 </div>
             </div>
         </div>

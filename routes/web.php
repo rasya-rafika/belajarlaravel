@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DokterController;
+use App\Http\Controllers\RatingController;
 use App\Models\Artikel;
 
 Route::get('/', function () {
@@ -46,6 +47,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dokter/{dokter}', [DokterController::class, 'show'])->name('dokter.show');
 });
 
+    Route::get('/dokter/{id}/rating', [RatingController::class, 'create'])->name('rating.create');
+    Route::post('/dokter/{id}/rating', [RatingController::class, 'store'])->name('rating.store');
+
+
 Route::get('/home', function () {
     return view('home');
 })->middleware(['auth', 'verified']);
@@ -71,5 +76,7 @@ Route::get('/contact', function () {
 })->middleware(['auth', 'verified', 'role_or_permission:tambah-adopsi|admin'])->name('contact');
 
 // dan seterusnya untuk 'blog' dan 'contact'
+
+
 
 require __DIR__.'/auth.php';
