@@ -6,7 +6,7 @@
 
         @role('admin')
             <div class="text-right mb-6">
-                <a href="{{ route('dokter.create') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded shadow">
+                <a href="{{ route('dokter.create')}}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded shadow">
                     + Tambah Dokter
                 </a>
             </div>

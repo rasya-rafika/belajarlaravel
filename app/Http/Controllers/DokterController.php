@@ -11,17 +11,17 @@ class DokterController extends Controller
 {
     // ✅ Halaman daftar dokter (untuk user & admin)
     public function index(Request $request)
-{
-    $lokasi = $request->get('lokasi');
+    {
+        $lokasi = $request->get('lokasi');
 
-    $dokters = Dokter::with('ratings') // supaya rating bisa dipakai langsung
-        ->when($lokasi, fn($q) => $q->where('lokasi', $lokasi))
-        ->get();
+        $dokters = Dokter::with('ratings') // supaya rating bisa dipakai langsung
+            ->when($lokasi, fn($q) => $q->where('lokasi', $lokasi))
+            ->get();
 
-    $lokasiList = Dokter::select('lokasi')->distinct()->pluck('lokasi');
+        $lokasiList = Dokter::select('lokasi')->distinct()->pluck('lokasi');
 
-    return view('dokter.index', compact('dokters', 'lokasiList', 'lokasi'));
-}
+        return view('dokter.index', compact('dokters', 'lokasiList', 'lokasi'));
+    }
 
     //Form tambah dokter (Admin)
     public function create()
@@ -30,25 +30,25 @@ class DokterController extends Controller
     }
 
     //Simpan data dokter
-public function store(Request $request)
-{
-    $validated = $request->validate([
-        'nama' => 'required|string|max:255',
-        'pengalaman' => 'required|string|max:255',
-        'lokasi' => 'required|string|max:255',
-        'alamat' => 'required|string',
-        'jadwal' => 'nullable|string',
-        'foto' => 'nullable|image|max:2048',
-    ]);
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'pengalaman' => 'required|string|max:255',
+            'lokasi' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'jadwal' => 'nullable|string',
+            'foto' => 'nullable|image|max:2048',
+        ]);
 
-    if ($request->hasFile('foto')) {
-        $validated['foto'] = $request->file('foto')->store('foto_dokter', 'public');
+        if ($request->hasFile('foto')) {
+            $validated['foto'] = $request->file('foto')->store('foto_dokter', 'public');
+        }
+
+        Dokter::create($validated);
+
+        return redirect()->route('dokter.index')->with('success', 'Data dokter berhasil disimpan!');
     }
-
-    Dokter::create($validated);
-
-    return redirect()->route('dokter.index')->with('success', 'Data dokter berhasil disimpan!');
-}
 
     //Form edit dokter
     public function edit(Dokter $dokter)
@@ -96,5 +96,4 @@ public function store(Request $request)
     {
         return view('dokter.show', compact('dokter'));
     }
-
 }

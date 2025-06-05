@@ -41,8 +41,15 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Assign role 'user'
-        $user->assignRole('user');
+        // Cek apakah email adalah admin@gmail.com
+        if ($user->email === 'admin@gmail.com') {
+            // Berikan role admin jika email adalah admin@gmail.com
+            $user->assignRole('admin');
+        } else {
+            // Berikan role user untuk semua email lain
+            $user->assignRole('user');
+        }
+
 
         // Beri permission tambah-artikel juga (opsional, karena role user sudah punya)
         $user->givePermissionTo('tambah-artikel');

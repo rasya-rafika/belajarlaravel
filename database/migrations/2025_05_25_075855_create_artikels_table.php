@@ -14,7 +14,11 @@ return new class extends Migration
             $table->string('link_artikel');
             $table->text('deskripsi');
             $table->string('gambar')->nullable();
+            $table->unsignedBigInteger('user_id');  // Menambahkan kolom user_id
             $table->timestamps();
+
+            // Menambahkan foreign key yang mengarah ke kolom id pada tabel users
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Menambahkan relasi
         });
     }
 
