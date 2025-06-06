@@ -44,29 +44,23 @@ Route::get('/admin', function(){
     return view('dashboard');
 })->middleware(['auth', 'verified', 'role:admin']);
 
-// USER: Route untuk CRUD artikel milik user
-Route::middleware(['auth', 'role:user'])->group(function () {
+//🔐 USER & ADMIN: Route untuk CRUD artikel (authenticated users) - TARUH DULU SEBELUM ROUTE {artikel}
+Route::middleware(['auth'])->group(function () {
+    // Create artikel - user dan admin bisa membuat
     Route::get('/artikel/create', [ArtikelController::class, 'create'])->name('artikel.create');
     Route::post('/artikel', [ArtikelController::class, 'store'])->name('artikel.store');
+    
+    // Edit & Update - user hanya artikel sendiri, admin semua artikel
     Route::get('/artikel/{artikel}/edit', [ArtikelController::class, 'edit'])->name('artikel.edit');
     Route::put('/artikel/{artikel}', [ArtikelController::class, 'update'])->name('artikel.update');
-
-    // User hanya bisa menghapus artikelnya sendiri
-    Route::delete('/artikel/{artikel}', [ArtikelController::class, 'destroy'])->name('artikel.destroy');
-});
-
-// ADMIN: Bisa hapus semua artikel
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::delete('/artikel/{artikel}', [ArtikelController::class, 'destroy'])->name('artikel.destroy');
     
-    // Admin bisa melihat semua artikel
-    Route::get('/artikel/{artikel}', [ArtikelController::class, 'show'])->name('artikel.show');
+    // Delete - user hanya artikel sendiri, admin semua artikel
+    Route::delete('/artikel/{artikel}', [ArtikelController::class, 'destroy'])->name('artikel.destroy');
 });
 
-// PUBLIC: Semua orang bisa melihat artikel
+// 🟢 PUBLIC: Route artikel yang bisa diakses semua orang (TARUH PALING BAWAH)
 Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
 Route::get('/artikel/{artikel}', [ArtikelController::class, 'show'])->name('artikel.show');
-
 
 // Auth scaffolding (Jetstream/Fortify/Breeze dsb)
 require __DIR__.'/auth.php';
