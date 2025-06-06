@@ -51,6 +51,8 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/artikel/{artikel}/edit', [ArtikelController::class, 'edit'])->name('artikel.edit');
     Route::put('/artikel/{artikel}', [ArtikelController::class, 'update'])->name('artikel.update');
 
+    // User hanya bisa menghapus artikelnya sendiri
+    Route::delete('/artikel/{artikel}', [ArtikelController::class, 'destroy'])->name('artikel.destroy');
 });
 
 // ADMIN: Bisa hapus semua artikel
@@ -64,7 +66,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // PUBLIC: Semua orang bisa melihat artikel
 Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
 Route::get('/artikel/{artikel}', [ArtikelController::class, 'show'])->name('artikel.show');
-
 
 
 // Auth scaffolding (Jetstream/Fortify/Breeze dsb)

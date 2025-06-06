@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Artikel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ArtikelController extends Controller
 {
@@ -47,7 +48,7 @@ class ArtikelController extends Controller
         ]);
 
         // Menyimpan file gambar jika ada
-        $gambar = $request->hasFile('gambar') ? $request->file('gambar')->store('images') : null;
+        $gambar = $request->hasFile('gambar') ? $request->file('gambar')->store('foto_artikel', 'public') : null;
 
         // Membuat artikel baru dengan mengaitkan user yang sedang login
         Artikel::create([
@@ -91,9 +92,14 @@ class ArtikelController extends Controller
             return redirect()->route('artikel.index')->with('error', 'Anda tidak memiliki akses untuk mengedit artikel ini.');
         }
 
+        // Hapus gambar lama sebelum mengganti dengan gambar baru
+        if ($artikel->gambar && Storage::exists('public/'.$artikel->gambar)) {
+            Storage::delete('public/'.$artikel->gambar);
+        }
+
         // Update gambar jika ada file gambar baru
         if ($request->hasFile('gambar')) {
-            $gambar = $request->file('gambar')->store('images');
+            $gambar = $request->file('gambar')->store('foto_artikel', 'public');
             $artikel->gambar = $gambar;
         }
 
@@ -115,6 +121,11 @@ class ArtikelController extends Controller
         // Memeriksa apakah artikel milik user yang sedang login atau admin
         if ($artikel->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
             return redirect()->route('artikel.index')->with('error', 'Anda tidak memiliki akses untuk menghapus artikel ini.');
+        }
+
+        // Menghapus gambar jika ada
+        if ($artikel->gambar && Storage::exists('public/'.$artikel->gambar)) {
+            Storage::delete('public/'.$artikel->gambar);
         }
 
         $artikel->delete();  // Menghapus artikel

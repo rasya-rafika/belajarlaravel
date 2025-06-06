@@ -1,4 +1,3 @@
-<!-- resources/views/artikel/index.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -12,38 +11,37 @@
                 <div class="p-6 text-gray-900">
                     <a href="{{ route('artikel.create') }}" class="mb-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-md">+ Tambah Artikel</a>
 
-                    <table class="min-w-full divide-y divide-gray-200 mt-4">
-                        <thead>
-                            <tr>
-                                <th class="px-6 py-3 text-left">No</th>
-                                <th class="px-6 py-3 text-left">Judul</th>
-                                <th class="px-6 py-3 text-left">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse ($artikels as $index => $artikel)
-                                <tr>
-                                    <td class="px-6 py-4">{{ $index + 1 }}</td>
-                                    <td class="px-6 py-4">{{ $artikel->judul }}</td>
-                                    <td class="px-6 py-4 space-x-2">
-                                        <a href="{{ $artikel->link_artikel }}" target="_blank" class="text-blue-500">Lihat</a>
-                                        @if ($artikel->user_id === Auth::id() || Auth::user()->hasRole('admin'))
-                                            <a href="{{ route('artikel.edit', $artikel->id) }}" class="text-yellow-500">Edit</a>
-                                            <form action="{{ route('artikel.destroy', $artikel->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus artikel ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-500">Hapus</button>
-                                            </form>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="3" class="px-6 py-4 text-center text-gray-500">Belum ada artikel.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                    <!-- Grid layout untuk artikel -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+                        @forelse ($artikels as $artikel)
+                            <div class="bg-orange-100 rounded-lg shadow-lg p-4">
+                                <!-- Foto Artikel -->
+                                @if($artikel->gambar)
+                                    <img src="{{ asset('storage/'.$artikel->gambar) }}" alt="{{ $artikel->judul }}" class="w-full h-48 object-cover rounded-lg mb-4">
+                                @else
+                                    <div class="w-full h-48 bg-gray-300 rounded-lg mb-4"></div> <!-- Placeholder jika tidak ada gambar -->
+                                @endif
+                                
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ $artikel->judul }}</h3>
+                                
+                                <div class="flex justify-between items-center mt-4">
+                                    <a href="{{ $artikel->link_artikel }}" target="_blank" class="text-blue-500 hover:text-blue-700">Lihat</a>
+                                    
+                                    <!-- Akses untuk Edit dan Hapus hanya untuk Pemilik atau Admin -->
+                                    @if ($artikel->user_id === Auth::id() || Auth::user()->hasRole('admin'))
+                                        <a href="{{ route('artikel.edit', $artikel->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
+                                        <form action="{{ route('artikel.destroy', $artikel->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus artikel ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-500 hover:text-red-700">Hapus</button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-center text-gray-500 mt-4">Belum ada artikel.</p>
+                        @endforelse
+                    </div>
 
                     <!-- Pagination -->
                     {{ $artikels->links() }}
