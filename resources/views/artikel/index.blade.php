@@ -28,14 +28,16 @@
                                     <a href="{{ $artikel->link_artikel }}" target="_blank" class="text-blue-500 hover:text-blue-700">Lihat</a>
                                     
                                     <!-- Akses untuk Edit dan Hapus hanya untuk Pemilik atau Admin -->
-                                    @if ($artikel->user_id === Auth::id() || Auth::user()->hasRole('admin'))
-                                        <a href="{{ route('artikel.edit', $artikel->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
-                                        <form action="{{ route('artikel.destroy', $artikel->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus artikel ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-500 hover:text-red-700">Hapus</button>
-                                        </form>
-                                    @endif
+                                    <!-- Akses untuk Edit dan Hapus hanya untuk Pemilik atau Admin -->
+@if (Auth::check() && ($artikel->user_id === Auth::id() || Auth::user()->hasRole('admin')))
+    <a href="{{ route('artikel.edit', $artikel->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
+    <form action="{{ route('artikel.destroy', $artikel->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus artikel ini?')">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="text-red-500 hover:text-red-700">Hapus</button>
+    </form>
+@endif
+
                                 </div>
                             </div>
                         @empty

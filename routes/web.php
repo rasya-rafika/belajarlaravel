@@ -26,7 +26,7 @@ Route::get('/dokter', [DokterController::class, 'index'])->name('dokter.index');
 Route::get('/dokter/{dokter}', [DokterController::class, 'show'])->name('dokter.show');
 Route::get('/adopsi', fn() => view('adopsi'))->name('adopsi');
 // Route untuk artikel (menampilkan daftar artikel)
-Route::get('/artikels', [ArtikelController::class, 'index'])->name('artikel.indexartikel');
+Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
 Route::get('/contact', fn() => view('contact'))->name('contact');
 
 // 🔐 Protected: hanya user login

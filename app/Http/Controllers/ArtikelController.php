@@ -11,17 +11,18 @@ class ArtikelController extends Controller
 {
     // Menampilkan daftar artikel
     public function index()
-    {
-        // Admin bisa melihat semua artikel
-        if (Auth::check() && Auth::user()->hasRole('admin')) {
-            $artikels = Artikel::latest()->paginate(10);  // Admin dapat melihat semua artikel
-        } else {
-            // User hanya melihat artikelnya sendiri
-            $artikels = Artikel::latest()->paginate(10);  // Semua user dapat melihat artikel
-        }
-
-        return view('artikel.index', compact('artikels'));
+{
+    // Admin bisa melihat semua artikel
+    if (Auth::check() && Auth::user()->hasRole('admin')) {
+        $artikels = Artikel::latest()->paginate(10);  // Admin dapat melihat semua artikel
+    } else {
+        // Semua orang bisa melihat artikel (termasuk yang belum login)
+        $artikels = Artikel::latest()->paginate(10);  // Semua user atau bukan user (belum login) bisa melihat artikel
     }
+
+    return view('artikel.index', compact('artikels'));
+}
+
 
     // Menampilkan artikel berdasarkan ID (untuk umum)
     public function show($id)
@@ -63,34 +64,36 @@ class ArtikelController extends Controller
     }
 
     // Menampilkan form untuk mengedit artikel
-    public function edit($id)
-    {
-        $artikel = Artikel::findOrFail($id);  // Mencari artikel yang akan diedit
+public function edit($id)
+{
+    $artikel = Artikel::findOrFail($id);  // Mencari artikel yang akan diedit
 
-        // Cek apakah artikel milik user yang sedang login atau admin
-        if ($artikel->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-            return redirect()->route('artikel.index')->with('error', 'Anda tidak memiliki akses untuk mengedit artikel ini.');
-        }
-
-        return view('artikel.edit', compact('artikel'));
+    // Admin bisa mengedit artikel apapun
+    if ($artikel->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
+        return redirect()->route('artikel.index')->with('error', 'Anda tidak memiliki akses untuk mengedit artikel ini.');
     }
 
+    return view('artikel.edit', compact('artikel'));
+}
+
+
     // Memperbarui artikel
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'judul' => 'required',
-            'link_artikel' => 'required|url',
-            'deskripsi' => 'required',
-            'gambar' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',  // Memastikan gambar valid
-        ]);
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'judul' => 'required',
+        'link_artikel' => 'required|url',
+        'deskripsi' => 'required',
+        'gambar' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',  // Memastikan gambar valid
+    ]);
 
-        $artikel = Artikel::findOrFail($id);  // Mencari artikel yang akan diupdate
+    $artikel = Artikel::findOrFail($id);  // Mencari artikel yang akan diupdate
 
-        // Cek apakah artikel milik user yang sedang login atau admin
-        if ($artikel->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-            return redirect()->route('artikel.index')->with('error', 'Anda tidak memiliki akses untuk mengedit artikel ini.');
-        }
+    // Admin bisa mengupdate artikel apapun
+    if ($artikel->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
+        return redirect()->route('artikel.index')->with('error', 'Anda tidak memiliki akses untuk mengedit artikel ini.');
+    }
+
 
         // Hapus gambar lama sebelum mengganti dengan gambar baru
         if ($artikel->gambar && Storage::exists('public/'.$artikel->gambar)) {
@@ -113,23 +116,26 @@ class ArtikelController extends Controller
         return redirect()->route('artikel.index')->with('success', 'Artikel berhasil diperbarui!');
     }
 
-    // Menghapus artikel berdasarkan ID
-    public function destroy($id)
-    {
-        $artikel = Artikel::findOrFail($id);  // Mencari artikel berdasarkan ID
+// Menghapus artikel berdasarkan ID
+public function destroy($id)
+{
+    $artikel = Artikel::findOrFail($id);  // Mencari artikel berdasarkan ID
 
-        // Memeriksa apakah artikel milik user yang sedang login atau admin
-        if ($artikel->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-            return redirect()->route('artikel.index')->with('error', 'Anda tidak memiliki akses untuk menghapus artikel ini.');
-        }
-
-        // Menghapus gambar jika ada
-        if ($artikel->gambar && Storage::exists('public/'.$artikel->gambar)) {
-            Storage::delete('public/'.$artikel->gambar);
-        }
-
-        $artikel->delete();  // Menghapus artikel
-
-        return redirect()->route('artikel.index')->with('success', 'Artikel berhasil dihapus!');
+    // Admin bisa menghapus artikel apapun, user hanya bisa menghapus artikel mereka sendiri
+    if ($artikel->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
+        return redirect()->route('artikel.index')->with('error', 'Anda tidak memiliki akses untuk menghapus artikel ini.');
     }
+
+    // Menghapus gambar jika ada
+    if ($artikel->gambar && Storage::exists('public/'.$artikel->gambar)) {
+        Storage::delete('public/'.$artikel->gambar);
+    }
+
+    $artikel->delete();  // Menghapus artikel
+
+    return redirect()->route('artikel.index')->with('success', 'Artikel berhasil dihapus!');
+}
+
+
+
 }
