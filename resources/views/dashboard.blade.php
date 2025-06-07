@@ -87,7 +87,7 @@
                 <img src="{{ asset('img/adopsi.jpg') }}" class="w-full h-64 object-cover rounded-lg mb-4" alt="Adopsi">
                 <h3 class="text-2xl font-semibold text-orange-600">Adopsi Hewan</h3>
                 <p class="text-gray-600 mt-2">Temukan hewan peliharaan yang siap diadopsi dan berikan mereka rumah baru.</p>
-                <a href="{{ route('adopsi') }}" class="inline-block mt-4 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded">
+               <a href="{{ route('adopsi.index') }}" class="inline-block mt-4 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded">
                 Lihat Detail</a>
             </div>
             <div class="bg-orange-100 p-6 rounded-xl shadow hover:shadow-lg transition">

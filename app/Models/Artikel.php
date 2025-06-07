@@ -8,6 +8,7 @@ class Artikel extends Model
 {
     // Nama tabel jika tidak menggunakan penamaan default (artikels)
     // protected $table = 'artikels';
+    
 
     // Kolom yang dapat diisi (mass assignable)
     protected $fillable = [

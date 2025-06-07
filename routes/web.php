@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\ArtikelController;
+use App\Http\Controllers\AdopsiController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Artikel;
 
@@ -24,7 +25,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // 🟢 Public: Info halaman yang tidak perlu login
 Route::get('/dokter', [DokterController::class, 'index'])->name('dokter.index');
 Route::get('/dokter/{dokter}', [DokterController::class, 'show'])->name('dokter.show');
-Route::get('/adopsi', fn() => view('adopsi'))->name('adopsi');
+// Route untuk halaman index adopsi
+Route::get('/adopsi', [AdopsiController::class, 'index'])->name('adopsi.index');
 // Route untuk artikel (menampilkan daftar artikel)
 Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
 Route::get('/contact', fn() => view('contact'))->name('contact');
@@ -61,6 +63,26 @@ Route::middleware(['auth'])->group(function () {
 // 🟢 PUBLIC: Route artikel yang bisa diakses semua orang (TARUH PALING BAWAH)
 Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
 Route::get('/artikel/{artikel}', [ArtikelController::class, 'show'])->name('artikel.show');
+
+
+// Admin: CRUD hewan adopsi
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/adopsi/create', [AdopsiController::class, 'create'])->name('adopsi.create');
+    Route::post('/adopsi', [AdopsiController::class, 'store'])->name('adopsi.store');
+    // Tambahan route untuk edit dan delete adopsi
+    Route::get('/adopsi/{id}/edit', [AdopsiController::class, 'edit'])->name('adopsi.edit');
+    Route::put('/adopsi/{id}', [AdopsiController::class, 'update'])->name('adopsi.update');
+    Route::delete('/adopsi/{id}', [AdopsiController::class, 'destroy'])->name('adopsi.destroy');
+});
+
+
+// User: Pengajuan adopsi
+Route::middleware('auth')->group(function () {
+    Route::get('/adopsi/{id}', [AdopsiController::class, 'show'])->name('adopsi.show');
+    Route::get('/adopsi/{id}/adopt', [AdopsiController::class, 'adopsiForm'])->name('adopsi.adopt');
+    Route::post('/adopsi/{id}/submit', [AdopsiController::class, 'submitAdopsi'])->name('adopsi.submitAdopsi');
+});
+
 
 // Auth scaffolding (Jetstream/Fortify/Breeze dsb)
 require __DIR__.'/auth.php';
