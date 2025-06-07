@@ -5,6 +5,7 @@ use App\Http\Controllers\DokterController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\AdopsiController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Artikel;
 
@@ -29,7 +30,7 @@ Route::get('/dokter/{dokter}', [DokterController::class, 'show'])->name('dokter.
 Route::get('/adopsi', [AdopsiController::class, 'index'])->name('adopsi.index');
 // Route untuk artikel (menampilkan daftar artikel)
 Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
-Route::get('/contact', fn() => view('contact'))->name('contact');
+Route::get('/contact', fn() => view('contact.index'))->name('contact');
 
 // 🔐 Protected: hanya user login
 Route::middleware('auth')->group(function () {
@@ -81,6 +82,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/adopsi/{id}', [AdopsiController::class, 'show'])->name('adopsi.show');
     Route::get('/adopsi/{id}/adopt', [AdopsiController::class, 'adopsiForm'])->name('adopsi.adopt');
     Route::post('/adopsi/{id}/submit', [AdopsiController::class, 'submitAdopsi'])->name('adopsi.submitAdopsi');
+});
+
+// Routes untuk user dan admin - menggunakan satu route yang sama
+Route::middleware(['auth'])->group(function () {
+    Route::get('/contact', [ContactController::class, 'index'])->name('contact.index'); // User: form, Admin: list contacts
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store'); // Submit contact form (user only)
+});
+
+// Admin specific routes
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/contact/{contact}', [ContactController::class, 'show'])->name('contact.show'); // View specific contact
+    Route::patch('/contact/{contact}/mark-read', [ContactController::class, 'markAsRead'])->name('contact.mark-read'); // Mark as read
+    Route::delete('/contact/{contact}', [ContactController::class, 'destroy'])->name('contact.destroy'); // Delete contact
+    Route::delete('/contact/{contact}/photo', [ContactController::class, 'destroyPhoto'])->name('contact.photo.destroy'); // Delete photo
 });
 
 
