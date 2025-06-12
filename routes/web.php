@@ -47,6 +47,10 @@ Route::get('/admin', function(){
     return view('dashboard');
 })->middleware(['auth', 'verified', 'role:admin']);
 
+Route::get('/user', function(){
+    return view('dashboard');
+})->middleware(['auth', 'verified', 'role:user']);
+
 //🔐 USER & ADMIN: Route untuk CRUD artikel (authenticated users) - TARUH DULU SEBELUM ROUTE {artikel}
 Route::middleware(['auth'])->group(function () {
     // Create artikel - user dan admin bisa membuat
