@@ -99,33 +99,33 @@
             </div>
         </div>
 
-           <!-- Artikel Preview Section -->
+       <!-- Artikel Preview Section - SafePaws Version -->
 <section id="artikel" class="bg-white px-6 py-12">
-    <h2 class="text-2xl font-bold text-orange-700 mb-6 text-center">Artikel Terbaru</h2>
-
-    @if(isset($artikels) && $artikels->count())
-        <div class="grid md:grid-cols-3 sm:grid-cols-2 gap-6">
-            @foreach ($artikels->take(3) as $item)
-                <div class="bg-white shadow rounded overflow-hidden">
-                    <img src="{{ asset('storage/' . $item->gambar) }}" alt="Artikel Image" class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <h2 class="text-lg font-bold text-orange-700">{{ $item->judul }}</h2>
-                        <p class="text-gray-600 text-sm mt-1">{{ Str::limit($item->deskripsi, 100) }}</p>
-                        <a href="{{ $item->link_artikel }}" target="_blank" class="text-blue-500 mt-2 inline-block">Baca selengkapnya</a>
-                    </div>
-                </div>
-            @endforeach
+    <h2 class="text-2xl md:text-3xl font-bold text-orange-700 mb-6 text-center">Artikel Kesehatan Hewan</h2>
+    
+    <!-- Simple Description -->
+    <div class="max-w-2xl mx-auto text-center mb-8 px-4">
+        <p class="text-gray-600 mb-4 text-sm md:text-base">
+            Temukan berbagai artikel bermanfaat seputar kesehatan hewan, perawatan, dan tips 
+            untuk menjaga kesejahteraan sahabat berbulu Anda.
+        </p>
+        
+        <!-- Quick Topics -->
+        <div class="flex flex-wrap justify-center gap-2 mb-6">
+            <span class="bg-orange-100 text-orange-700 px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm">Kesehatan Hewan</span>
+            <span class="bg-green-100 text-green-700 px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm">Perawatan</span>
+            <span class="bg-purple-100 text-purple-700 px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm">Tips & Trik</span>
+            <span class="bg-amber-100 text-amber-700 px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm">Kesejahteraan</span>
         </div>
-        <div class="text-center mt-8">
-            <a href="{{ route('artikel.index') }}" class="inline-block bg-orange-600 hover:bg-orange-700 text-white px-5 py-2 rounded font-semibold transition">
-                Lihat Semua Artikel
-            </a>
-        </div>
-    @else
-        <p class="text-gray-500 text-center">Belum ada artikel yang tersedia.</p>
-    @endif
+    </div>
+    
+    <div class="text-center mt-8 px-4">
+        <!-- Tombol Baca Artikel - Responsive -->
+        <a href="{{ route('artikel.index') }}" class="inline-block w-full sm:w-auto bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white px-6 py-3 md:px-8 md:py-4 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg text-sm md:text-base">
+            🐾 Baca Artikel
+        </a>
+    </div>
 </section>
-
 
    <!-- Contact Section -->
 <section class="bg-[#FFE8DB] py-12 px-4">
