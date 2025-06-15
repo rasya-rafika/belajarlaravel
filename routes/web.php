@@ -21,6 +21,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dokter/{dokter}/edit', [DokterController::class, 'edit'])->name('dokter.edit');
     Route::put('/dokter/{dokter}', [DokterController::class, 'update'])->name('dokter.update');
     Route::delete('/dokter/{dokter}', [DokterController::class, 'destroy'])->name('dokter.destroy');
+    Route::get('/dokter/chart', [DokterController::class, 'chartRating'])->name('dokter.chart');
+   Route::post('/dokter/generate-pdf', [DokterController::class, 'generatePdf'])->name('dokter.generatePdf');
 });
 
 // 🟢 Public: Info halaman yang tidak perlu login

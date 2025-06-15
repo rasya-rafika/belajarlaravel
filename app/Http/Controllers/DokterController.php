@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Dokter;
 use App\Models\Rating;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DokterController extends Controller
 {
@@ -96,4 +97,99 @@ class DokterController extends Controller
     {
         return view('dokter.show', compact('dokter'));
     }
+
+    // ✅ FIXED: Halaman Chart Rating (Admin only)
+    public function chartRating()
+    {
+        // Ambil semua dokter dengan ratings
+        $dokters = Dokter::with(['ratings' => function($query) {
+            $query->select('dokter_id', 'nilai', 'created_at');
+        }])->get();
+
+        // Siapkan data untuk chart
+        $dokterNames = [];
+        $ratings = [];
+        $chartData = [];
+
+        foreach ($dokters as $dokter) {
+            $avgRating = $dokter->ratings->avg('nilai') ?? 0;
+            $totalRating = $dokter->ratings->count();
+            
+            // Data untuk chart JS
+            $dokterNames[] = $dokter->nama;
+            $ratings[] = round($avgRating, 1);
+            
+            // Data untuk tabel/display
+            $chartData[] = [
+                'nama' => $dokter->nama,
+                'rata_rating' => round($avgRating, 1),
+                'total_rating' => $totalRating,
+                'lokasi' => $dokter->lokasi
+            ];
+        }
+
+        // Statistik keseluruhan
+        $totalDokter = $dokters->count();
+        $totalReview = Rating::count();
+        $ratingRataRata = Rating::avg('nilai') ?? 0;
+
+        // Urutkan berdasarkan rata-rata rating tertinggi
+        $chartData = collect($chartData)->sortByDesc('rata_rating')->values()->all();
+
+        return view('dokter.chart', compact(
+            'chartData',
+            'dokters',
+            'dokterNames',
+            'ratings',
+            'totalDokter',
+            'totalReview',
+            'ratingRataRata'
+        ));
+    }
+
+    // ✅ TAMBAHAN BARU: Download PDF Rating Report (Admin only)
+    public function generatePdf(Request $request)
+{
+    $chartBase64 = $request->input('chart');
+
+    $dokters = Dokter::with(['ratings' => function($query) {
+        $query->select('dokter_id', 'nilai', 'created_at');
+    }])->get();
+
+    // Data untuk PDF
+    $reportData = [];
+    foreach ($dokters as $dokter) {
+        $ratings = $dokter->ratings;
+        $avgRating = $ratings->avg('nilai') ?? 0;
+        $totalRating = $ratings->count();
+        
+        // Distribusi rating (1-5 bintang)
+        $distribution = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $count = $ratings->where('nilai', $i)->count();
+            $distribution[$i] = $count;
+        }
+
+        $reportData[] = [
+            'nama' => $dokter->nama,
+            'lokasi' => $dokter->lokasi,
+            'pengalaman' => $dokter->pengalaman,
+            'rata_rating' => round($avgRating, 1),
+            'total_rating' => $totalRating,
+            'distribusi' => $distribution,
+            'rating_terbaru' => $ratings->sortByDesc('created_at')->first()
+        ];
+    }
+
+    $reportData = collect($reportData)->sortByDesc('rata_rating')->values()->all();
+
+    $pdf = Pdf::loadView('dokter.pdf-report', [
+        'reportData' => $reportData,
+        'tanggal' => now()->format('d F Y'),
+        'chartBase64' => $chartBase64
+    ])->setPaper('a4', 'portrait');
+
+    return $pdf->download('laporan-rating-dokter-' . now()->format('Y-m-d') . '.pdf');
+}
+
 }

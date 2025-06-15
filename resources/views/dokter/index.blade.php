@@ -20,9 +20,21 @@
                 </p>
             </div>
 
-            <!-- Admin Add Button -->
+            <!-- Admin Action Buttons -->
             @role('admin')
-                <div class="flex justify-center sm:justify-end mb-8">
+                <div class="flex flex-col sm:flex-row justify-center sm:justify-end gap-4 mb-8">
+                    <!-- Chart Rating Button -->
+                    <a href="{{ route('dokter.chart') }}" 
+                       class="group inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
+                        <svg class="w-5 h-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        Chart Rating
+                    </a>
+                    
+                   
+                    
+                    <!-- Add Doctor Button -->
                     <a href="{{ route('dokter.create')}}" 
                        class="group inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
                         <svg class="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,7 +52,7 @@
                         <div class="flex items-center gap-3">
                             <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>  
                             </svg>
                             <select name="lokasi" onchange="this.form.submit()" 
                                     class="px-4 py-3 border border-orange-200 rounded-full shadow-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white min-w-[200px]">
