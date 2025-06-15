@@ -30,7 +30,7 @@
                                 @endif
 
                                 <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ $adopsi->nama_hewan }}</h3>
-                                <p class="text-gray-600 mb-2">Umur: {{ $adopsi->umur }} Tahun</p>
+                                <p class="text-gray-600 mb-2">Umur: {{ $adopsi->umur }} Bulan</p>
                                 <p class="text-gray-600 mb-2">Jenis Kelamin: {{ $adopsi->jenis_kelamin }}</p>
                                 
                                 <!-- New Fields: Status and Jenis Hewan -->
