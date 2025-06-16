@@ -146,7 +146,23 @@ class AdopsiController extends Controller
             'alamat' => $request->alamat,
             'nomor_telepon' => $request->nomor_telepon,
             'alasan_adopsi' => $request->alasan_adopsi,
+            'email' => $request->email,
+            'usia' => $request->usia,
+            'pekerjaan' => $request->pekerjaan,
+            'tipe_hunian' => $request->tipe_hunian,
+            'status_hunian' => $request->status_hunian,
+            'ada_halaman' => $request->ada_halaman,
+            'pengalaman_hewan' => $request->pengalaman_hewan,
+            'detail_pengalaman' => $request->detail_pengalaman,
+            'hewan_lain' => $request->hewan_lain,
+            'detail_hewan_lain' => $request->detail_hewan_lain,
+            'komitmen_waktu' => $request->komitmen_waktu,
+            'rencana_perawatan' => $request->rencana_perawatan,
+            'setuju_kunjungan' => $request->has('setuju_kunjungan'),
+            'setuju_followup' => $request->has('setuju_followup'),
+            'setuju_tanggung_jawab' => $request->has('setuju_tanggung_jawab'),
         ]);
+
 
         return redirect()->route('adopsi.index')->with('success', 'Pengajuan adopsi berhasil dikirim!');
     }
